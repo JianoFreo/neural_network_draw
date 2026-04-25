@@ -27,11 +27,13 @@ viewer.draw()
 ### Example 2 : Lower-level API if you want to build the layers manually
 ```python
 network = NeuralNetwork(12)
-network.add_layer(11)
+network.add_layer(4)
 network.add_layer(8)
 network.add_layer(6)
 network.add_layer(10)
+network.add_layer(3)
 network.draw()
 ```
-<img width="571" height="382" alt="image" src="https://github.com/user-attachments/assets/500af726-8cab-4940-8727-6f1696238a7e" />
+<img width="723" height="583" alt="image" src="https://github.com/user-attachments/assets/1b85a3ce-78d2-4028-b562-4090505e4dd1" />
+
 
