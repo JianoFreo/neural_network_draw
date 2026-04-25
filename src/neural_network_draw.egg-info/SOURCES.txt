@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+src/neural_network_draw/__init__.py
+src/neural_network_draw/__main__.py
+src/neural_network_draw/core.py
+src/neural_network_draw.egg-info/PKG-INFO
+src/neural_network_draw.egg-info/SOURCES.txt
+src/neural_network_draw.egg-info/dependency_links.txt
+src/neural_network_draw.egg-info/requires.txt
+src/neural_network_draw.egg-info/top_level.txt

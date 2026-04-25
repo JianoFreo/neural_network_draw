@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "neural-network-draw"
+version = "0.1.0"
+description = "Draw simple feed-forward neural network diagrams with matplotlib"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{ name = "neural-network-draw contributors" }]
+dependencies = [
+  "matplotlib>=3.7"
+]
+keywords = ["neural-network", "visualization", "matplotlib"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Operating System :: OS Independent"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
