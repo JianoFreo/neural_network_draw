@@ -14,6 +14,40 @@ For development:
 pip install -e .
 ```
 
+## Install on Another Device
+
+### Option 1: Install from Git repository
+
+If this project is hosted on GitHub (or another Git host), users can install it directly:
+
+```bash
+python -m pip install "git+https://github.com/JianoFreo/neural-network-draw.git"
+```
+
+### Option 2: Install from a downloaded folder
+
+If someone has a ZIP copy of this project, they can extract it, open a terminal in the project folder, and run:
+
+```bash
+python -m pip install .
+```
+
+### Option 3: Install from PyPI
+
+After publishing a release, anyone can install with:
+
+```bash
+python -m pip install neural-network-draw
+```
+
+To publish a new release
+
+```bash
+python -m pip install build twine
+python -m build
+twine upload dist/*
+```
+
 ## Quick Start
 
 ```python
