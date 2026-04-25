@@ -8,7 +8,9 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: matplotlib>=3.7
+Dynamic: license-file
 Dynamic: requires-python
 
 1. Installation
@@ -30,4 +32,30 @@ my_network = [4, 8, 8, 2]
 # Initialize the drawer and render the diagram
 viewer = DrawNN(my_network)
 viewer.draw()
+```
+
+3. More Examples
+
+```python
+from neural_network_draw import DrawNN
+
+# Small network
+DrawNN([2, 3, 1]).draw()
+
+# Balanced network
+DrawNN([4, 4, 4]).draw()
+
+# Deeper network with multiple hidden layers
+DrawNN([6, 8, 8, 4, 2]).draw()
+```
+
+```python
+from neural_network_draw import NeuralNetwork
+
+# Lower-level API if you want to build the layers manually
+network = NeuralNetwork(8)
+network.add_layer(3)
+network.add_layer(8)
+network.add_layer(2)
+network.draw()
 ```

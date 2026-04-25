@@ -2,7 +2,7 @@
 The most common way to install is via pip:
 
 ```bash
-pip install neural-network-draw
+pip install neural-network-draw==0.1.0
 ```
 ---
 2. Basic Usage
