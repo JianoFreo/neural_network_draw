@@ -74,4 +74,3 @@ class Layer:
             plt.text(x_text, self.y, 'Output Layer', fontsize=12)
         else:
             plt.text(x_text, self.y, f'Hidden Layer {layer_type}', fontsize=12)
-
