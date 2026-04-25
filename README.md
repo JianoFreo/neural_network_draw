@@ -1,7 +1,7 @@
 # Install via pip
 
 ```bash
-pip install neural-network-draw==0.1.0
+pip install neural-network-draw
 ```
 ---
 Basic Usage
