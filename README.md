@@ -1,14 +1,15 @@
 # Install via pip
-
+Windows
 ```bash
 pip install neural-network-draw
 ```
----
-Basic Usage
-To use the library, they simply need to import the DrawNN class and provide a list representing the number of neurons in each layer.
-
-```python
-from neural_network_draw import *
+macOS / Linux
+```bash
+pip3 install neural-network-draw
+```
+If pip3 doesn’t work, try:
+```bash
+python3 -m pip install neural-network-draw
 ```
 ### Example 1 : input neurons, three hidden layers (8, 10, 10), and 2 output neurons
 ```python
