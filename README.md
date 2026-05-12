@@ -1,5 +1,5 @@
 # Install via pip
-Windows
+Windows 
 ```bash
 pip install neural-network-draw
 ```
