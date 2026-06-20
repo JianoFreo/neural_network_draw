@@ -26,7 +26,7 @@ class DrawNN:
         self.output_labels = output_labels
         self.title = title
 
-    def draw(self, show_weights=False, figsize=(10, 6)):
+    def draw(self, show_weights=False, figsize=None):
         widest_layer = max(self.neural_network)
         network = NeuralNetwork(widest_layer, title=self.title)
 
