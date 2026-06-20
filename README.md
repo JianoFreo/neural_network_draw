@@ -16,7 +16,7 @@ It supports both:
 ```bash
 pip install neural_network_draw
 ```
-or ( would like to install the latest version if you have the v.0.1.0 installed )
+or ( would install the latest version if you have the v.0.1.0 installed )
 ```bash
 pip install --upgrade neural-network-draw
 ```
@@ -86,17 +86,17 @@ network.add_layer(
 
 network.draw(show_weights=True)
 ```
-![alt text](image.png)
+<img width="596" height="720" alt="image" src="https://github.com/user-attachments/assets/6949d89f-0eeb-459a-8b13-1229b35f3b4e" />
 
 ---
 
 ## 2.  `DrawNN` (High-level API)
 
-![alt text](image-1.png)
+<img width="676" height="692" alt="image-1 (1)" src="https://github.com/user-attachments/assets/88296c93-112b-49a8-b753-f2281012f009" />
 
 ## 3. Labeled structure
 
-![alt text](image-2.png)
+<img width="650" height="757" alt="image-2" src="https://github.com/user-attachments/assets/1d957bb4-6097-457a-a87a-2c5cbe5d50a4" />
 
 A simplified interface for quickly defining architectures.
 
