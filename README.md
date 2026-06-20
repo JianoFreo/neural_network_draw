@@ -10,7 +10,16 @@ It supports both:
 *  Low-level step-by-step network building (`NeuralNetwork`)
 *  High-level one-call architecture visualization (`DrawNN`)
 
----
+
+# to install
+
+```bash
+pip install neural_network_draw
+```
+or ( would like to install the latest version if you have the v.0.1.0 installed )
+```bash
+pip install --upgrade neural-network-draw
+```
 
 #  What this library does
 
