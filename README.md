@@ -35,16 +35,6 @@ This library converts a neural network definition into a **visual graph represen
 
 ---
 
-#  What this library does NOT do
-
-* It does NOT train neural networks
-* It does NOT perform inference
-* It does NOT use deep learning frameworks like PyTorch or TensorFlow
-
-It is purely a **visualization + education tool**.
-
----
-
 #  Architecture Overview
 
 The project has two main APIs:
@@ -169,11 +159,10 @@ It transforms structured model definitions into **clean educational diagrams**.
 
 #  Use Cases
 
-* Teaching neural networks
+* Visualize forward and backward propagation
 * Explaining architectures in blogs
 * ML presentations
 * Debugging model structure
-* Portfolio visualization tools
 
 ---
 
