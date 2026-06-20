@@ -98,6 +98,12 @@ network.draw(show_weights=True)
 
 ## 2.  `DrawNN` (High-level API)
 
+![alt text](image-1.png)
+
+## 3. Labeled structure
+
+![alt text](image-2.png)
+
 A simplified interface for quickly defining architectures.
 
 ### Example:
@@ -147,50 +153,8 @@ dnn.draw(show_weights=True)
 * Human-readable feature names
 * Class labels or regression outputs
 
----
-
-#  Example Script (`test_script.py`)
-
-The repository includes a full test suite demonstrating all features:
-
-### Includes:
-
-* Basic architecture drawing
-* Full low-level API usage
-* High-level API usage
-* Weight visualization modes
-* Bias-only visualizations
-* Large input feature sets
-* Regression-style networks
-
-### Run all examples:
-
-```bash
-python3 test_script.py
-```
 
 ---
-
-#  Output Behavior
-
-By default:
-
-* Uses `matplotlib.use("Agg")` (headless mode)
-* Saves diagrams as PNG files
-
-Example:
-
-```
-Saved example_4_high_level_full_features.png
-```
-
-If you remove Agg mode:
-
-* diagrams open in a window instead
-* interactive matplotlib backend is used
-
----
-
 #  Dependencies
 
 * Python 3.8+
