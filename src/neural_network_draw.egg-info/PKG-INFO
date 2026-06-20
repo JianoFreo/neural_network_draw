@@ -13,43 +13,219 @@ Requires-Dist: matplotlib>=3.7
 Dynamic: license-file
 Dynamic: requires-python
 
-# Install via pip
-Windows 
-```bash
-pip install neural-network-draw
-```
-macOS / Linux
-```bash
-pip3 install neural-network-draw
-```
-If pip3 doesn’t work, try:
-```bash
-python3 -m pip install neural-network-draw
-```
-### Example 1 : input neurons, three hidden layers (8, 10, 10), and 2 output neurons
+
+# neural_network_draw
+
+A Python library for **visualizing neural network architectures** using matplotlib.
+
+This project focuses on **rendering neural networks as diagrams**, not training or running models.
+
+It supports both:
+
+*  Low-level step-by-step network building (`NeuralNetwork`)
+*  High-level one-call architecture visualization (`DrawNN`)
+
+---
+
+#  What this library does
+
+This library converts a neural network definition into a **visual graph representation**, including:
+
+* Layers and neurons
+* Connections between neurons
+* Optional weights visualization
+* Bias values
+* Activation labels
+* Input/output annotations
+* Clean, publication-ready diagrams
+
+---
+
+#  What this library does NOT do
+
+* It does NOT train neural networks
+* It does NOT perform inference
+* It does NOT use deep learning frameworks like PyTorch or TensorFlow
+
+It is purely a **visualization + education tool**.
+
+---
+
+#  Architecture Overview
+
+The project has two main APIs:
+
+## 1.  `NeuralNetwork` (Low-level API)
+
+A step-by-step builder for full control over each layer.
+
+### Example:
+
 ```python
+network = NeuralNetwork(4)
 
-my_network = [4, 8, 10 ,10, 2]
-# first index = input
-# last index = output
-# middles = hidden layers
+network.add_layer(3, labels=["pixel_1", "pixel_2", "pixel_3"])
 
-# Initialize the drawer and render the diagram
-viewer = DrawNN(my_network)
-viewer.draw()
+network.add_layer(
+    4,
+    weights=[
+        [0.10, -0.20, 0.30, 0.40],
+        [0.50, 0.60, -0.70, 0.80],
+        [-0.10, 0.20, 0.30, -0.40],
+    ],
+    biases=[0.10, 0.20, 0.30, 0.40],
+    activation="ReLU",
+)
+
+network.add_layer(
+    2,
+    weights=[
+        [0.20, -0.30],
+        [0.10, 0.40],
+        [0.50, -0.60],
+        [0.20, 0.10],
+    ],
+    biases=[0.05, -0.05],
+    activation="Softmax",
+    labels=["Cat", "Dog"],
+)
+
+network.draw(show_weights=True)
 ```
-<img width="475" height="366" alt="image" src="https://github.com/user-attachments/assets/176da97c-db6a-4cfd-8ce9-9f0340c4989c" />
+![alt text](image.png)
 
-### Example 2 : Lower-level API if you want to build the layers manually
+---
+
+## 2.  `DrawNN` (High-level API)
+
+A simplified interface for quickly defining architectures.
+
+### Example:
+
 ```python
-network = NeuralNetwork(12)
-network.add_layer(4)
-network.add_layer(8)
-network.add_layer(6)
-network.add_layer(10)
-network.add_layer(3)
-network.draw()
+dnn = DrawNN(
+    [3, 4, 2],
+    weights=[...],
+    biases=[None, [...], [...]],
+    activations=[None, "ReLU", "Softmax"],
+    input_labels=["x1", "x2", "x3"],
+    output_labels=["Cat", "Dog"],
+    title="High-Level API Example",
+)
+
+dnn.draw(show_weights=True)
 ```
-<img width="723" height="583" alt="image" src="https://github.com/user-attachments/assets/1b85a3ce-78d2-4028-b562-4090505e4dd1" />
+
+---
+
+#  Visualization Features
+
+##  Network structure rendering
+
+* Fully automatic layer spacing
+* Centered neuron layout
+
+##  Weights display
+
+* Optional numeric display
+* Color/thickness encodes magnitude & sign
+
+##  Bias visualization
+
+* Shown per neuron (optional)
+* Supports partial or full specification
+
+##  Activation labels
+
+* ReLU
+* Softmax
+* Sigmoid
+* Custom strings supported
+
+##  Input / output labeling
+
+* Human-readable feature names
+* Class labels or regression outputs
+
+---
+
+#  Example Script (`test_script.py`)
+
+The repository includes a full test suite demonstrating all features:
+
+### Includes:
+
+* Basic architecture drawing
+* Full low-level API usage
+* High-level API usage
+* Weight visualization modes
+* Bias-only visualizations
+* Large input feature sets
+* Regression-style networks
+
+### Run all examples:
+
+```bash
+python3 test_script.py
+```
+
+---
+
+#  Output Behavior
+
+By default:
+
+* Uses `matplotlib.use("Agg")` (headless mode)
+* Saves diagrams as PNG files
+
+Example:
+
+```
+Saved example_4_high_level_full_features.png
+```
+
+If you remove Agg mode:
+
+* diagrams open in a window instead
+* interactive matplotlib backend is used
+
+---
+
+#  Dependencies
+
+* Python 3.8+
+* matplotlib
+* numpy (if used internally in layout logic)
+
+---
+
+#  Key Design Philosophy
+
+This library is designed to be:
+
+>  A **visual compiler for neural network architectures**
+
+It transforms structured model definitions into **clean educational diagrams**.
+
+---
+
+#  Use Cases
+
+* Teaching neural networks
+* Explaining architectures in blogs
+* ML presentations
+* Debugging model structure
+* Portfolio visualization tools
+
+---
+
+
+* Interactive zoom/hover tooltips
+* SVG / web export (React-friendly)
+* Auto-generation from PyTorch models
+* Animation of forward pass
+* Graph-based auto-layout improvements
+
+---
 
 

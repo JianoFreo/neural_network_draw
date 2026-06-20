@@ -4,13 +4,9 @@ pyproject.toml
 setup.py
 src/neural_network_draw/__init__.py
 src/neural_network_draw/_deps.py
-src/neural_network_draw/drawNN (3).py
 src/neural_network_draw/drawNN.py
-src/neural_network_draw/layer (8).py
 src/neural_network_draw/layer.py
-src/neural_network_draw/neuralNetwork (4).py
 src/neural_network_draw/neuralNetwork.py
-src/neural_network_draw/neuron (11).py
 src/neural_network_draw/neuron.py
 src/neural_network_draw.egg-info/PKG-INFO
 src/neural_network_draw.egg-info/SOURCES.txt
