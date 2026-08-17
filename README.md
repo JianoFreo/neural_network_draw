@@ -147,15 +147,6 @@ dnn.draw(show_weights=True)
 
 ---
 
-#  Key Design Philosophy
-
-This library is designed to be:
-
->  A **visual compiler for neural network architectures**
-
-It transforms structured model definitions into **clean educational diagrams**.
-
----
 
 #  Use Cases
 
