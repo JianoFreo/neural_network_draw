@@ -198,7 +198,14 @@ Where:
 After the linear transformation, an activation function is applied:
 
 **ReLU (Rectified Linear Unit):**
-$$a_j^{(l)} = \max(0, z_j^{(l)}) = \begin{cases} z_j^{(l)} & \text{if } z_j^{(l)} > 0 \\ 0 & \text{otherwise} \end{cases}$$
+
+$$
+a_j^{(l)} = \max(0, z_j^{(l)}) =
+\begin{cases}
+z_j^{(l)} & \text{if } z_j^{(l)} > 0 \\
+0 & \text{otherwise}
+\end{cases}
+$$
 
 **Sigmoid:**
 $$a_j^{(l)} = \sigma(z_j^{(l)}) = \frac{1}{1 + e^{-z_j^{(l)}}}$$
