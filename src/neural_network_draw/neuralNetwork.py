@@ -15,6 +15,7 @@ class NeuralNetwork:
         self.layers = []
         self.layer_specs = []  # (weights, biases, activation, labels) per layer
         self.title = title
+        self.highlight_path = None  # List of neuron indices per layer to highlight
 
     def add_layer(self, number_of_neurons, weights=None, biases=None, activation=None, labels=None):
         """
@@ -33,6 +34,15 @@ class NeuralNetwork:
             "activation": activation,
             "labels": labels,
         })
+
+    def set_highlight_path(self, highlight_path):
+        """
+        Set which neurons to highlight in each layer.
+        highlight_path: list of lists, where each inner list contains neuron indices to highlight
+                       for that layer. E.g., [[0], [1, 2], [0]] highlights neuron 0 in layer 0,
+                       neurons 1 and 2 in layer 1, and neuron 0 in layer 2.
+        """
+        self.highlight_path = highlight_path
 
     def __build_layers(self, show_weights):
         # Spacing scales up automatically based on which features are active,
@@ -83,7 +93,20 @@ class NeuralNetwork:
         for i, layer in enumerate(self.layers):
             layer_type = -1 if i == len(self.layers) - 1 else i
             layer_weights = self.layer_specs[i]["weights"]
-            layer.draw(layer_type, weights=layer_weights, show_weights=show_weights)
+            
+            # Determine which neurons are highlighted in this layer
+            highlighted_neurons = None
+            if self.highlight_path and i < len(self.highlight_path):
+                highlighted_neurons = self.highlight_path[i]
+            
+            # Determine which neurons are highlighted in the next layer
+            next_highlighted_neurons = None
+            if self.highlight_path and i + 1 < len(self.highlight_path):
+                next_highlighted_neurons = self.highlight_path[i + 1]
+            
+            layer.draw(layer_type, weights=layer_weights, show_weights=show_weights,
+                      highlighted_neurons=highlighted_neurons,
+                      next_highlighted_neurons=next_highlighted_neurons)
 
         plt.axis('scaled')
         plt.axis('off')

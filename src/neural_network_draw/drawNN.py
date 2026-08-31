@@ -6,7 +6,8 @@ except ImportError:
 
 class DrawNN:
     def __init__(self, neural_network, weights=None, biases=None, activations=None,
-                 input_labels=None, output_labels=None, title="Neural Network Architecture"):
+                 input_labels=None, output_labels=None, title="Neural Network Architecture",
+                 highlight_path=None):
         """
         neural_network: list of ints, e.g. [3, 4, 4, 2] (sizes of each layer)
         weights: optional list of 2D lists, one per connection between consecutive layers,
@@ -17,6 +18,8 @@ class DrawNN:
         input_labels: optional list of feature names for the input layer neurons
         output_labels: optional list of class names for the output layer neurons
         title: custom title shown above the diagram
+        highlight_path: optional list of lists specifying which neurons to highlight per layer,
+                       e.g. [[0], [1, 2], [0]] highlights specific neuron paths through the network
         """
         self.neural_network = neural_network
         self.weights = weights
@@ -25,6 +28,7 @@ class DrawNN:
         self.input_labels = input_labels
         self.output_labels = output_labels
         self.title = title
+        self.highlight_path = highlight_path
 
     def draw(self, show_weights=False, figsize=None):
         widest_layer = max(self.neural_network)
@@ -57,5 +61,8 @@ class DrawNN:
                 activation=layer_activation,
                 labels=layer_labels,
             )
+
+        if self.highlight_path is not None:
+            network.set_highlight_path(self.highlight_path)
 
         network.draw(show_weights=show_weights, figsize=figsize)
