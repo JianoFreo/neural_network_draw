@@ -230,22 +230,5 @@ Where $f$ is the activation function for that layer.
 ---
 
 
-#  Use Cases
-
-* Visualize forward and backward propagation
-* Explaining architectures in blogs
-* ML presentations
-* Debugging model structure
-
----
-
-
-* Interactive zoom/hover tooltips
-* SVG / web export (React-friendly)
-* Auto-generation from PyTorch models
-* Animation of forward pass
-* Graph-based auto-layout improvements
-
----
 
 
