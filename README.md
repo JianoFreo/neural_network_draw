@@ -139,6 +139,49 @@ dnn.draw(show_weights=True)
 
 
 ---
+
+
+## Neuron Computation (Forward Propagation)
+
+For a single neuron $j$ in layer $l$, the computation is:
+
+**Linear transformation with bias:**
+$$z_j^{(l)} = \sum_{i=1}^{n_{l-1}} w_{ij}^{(l)} \cdot a_i^{(l-1)} + b_j^{(l)}$$
+
+Where:
+- $w_{ij}^{(l)}$ = weight from neuron $i$ in layer $(l-1)$ to neuron $j$ in layer $l$
+- $a_i^{(l-1)}$ = activation output from neuron $i$ in previous layer
+- $b_j^{(l)}$ = bias term for neuron $j$
+- $z_j^{(l)}$ = pre-activation value (shown as weights on connections)
+
+## Activation Functions
+
+After the linear transformation, an activation function is applied:
+
+**ReLU (Rectified Linear Unit):**
+$$a_j^{(l)} = \max(0, z_j^{(l)}) = \begin{cases} z_j^{(l)} & \text{if } z_j^{(l)} > 0 \\ 0 & \text{otherwise} \end{cases}$$
+
+**Sigmoid:**
+$$a_j^{(l)} = \sigma(z_j^{(l)}) = \frac{1}{1 + e^{-z_j^{(l)}}}$$
+
+**Softmax (for output layer with $n$ neurons):**
+$$a_j^{(l)} = \frac{e^{z_j^{(l)}}}{\sum_{k=1}^{n} e^{z_k^{(l)}}}$$
+
+**Tanh:**
+$$a_j^{(l)} = \tanh(z_j^{(l)}) = \frac{e^{2z_j^{(l)}} - 1}{e^{2z_j^{(l)}} + 1}$$
+
+## Layer-wise Computation
+
+For a complete layer with weight matrix $W^{(l)}$, bias vector $b^{(l)}$, and input $a^{(l-1)}$:
+
+$$z^{(l)} = W^{(l)} \cdot a^{(l-1)} + b^{(l)}$$
+
+$$a^{(l)} = f(z^{(l)})$$
+
+Where $f$ is the activation function for that layer.
+
+---
+
 #  Dependencies
 
 * Python 3.8+
