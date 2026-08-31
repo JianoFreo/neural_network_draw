@@ -137,7 +137,46 @@ dnn.draw(show_weights=True)
 * Human-readable feature names
 * Class labels or regression outputs
 
+##  Connection highlighting
 
+* Highlight signal paths through specific neurons
+* Visualize forward propagation routes
+* Identify computational paths of interest
+* Use `highlight_path` parameter to specify neurons to highlight per layer
+
+### Example:
+
+```python
+# Highlight a specific path through the network
+# This highlights neuron 0 in layer 0 → neurons 1,2 in layer 1 → neuron 0 in layer 2
+network = NeuralNetwork(4)
+network.add_layer(3, labels=["pixel_1", "pixel_2", "pixel_3"])
+network.add_layer(4, activation="ReLU")
+network.add_layer(2, activation="Softmax", labels=["Cat", "Dog"])
+
+# Set the path to highlight
+network.set_highlight_path([[0], [1, 2], [0]])
+network.draw(show_weights=True)
+```
+
+# Or use DrawNN with highlight_path:
+
+```python
+dnn = DrawNN(
+    [3, 4, 2],
+    weights=[...],
+    biases=[None, [...], [...]],
+    activations=[None, "ReLU", "Softmax"],
+    input_labels=["x1", "x2", "x3"],
+    output_labels=["Cat", "Dog"],
+    highlight_path=[[0], [1, 2], [0]],  # Highlight specific neuron path
+)
+dnn.draw(show_weights=True)
+```
+
+Highlighted connections are displayed in bright green with thicker lines to stand out from regular connections.
+
+---
 ---
 
 

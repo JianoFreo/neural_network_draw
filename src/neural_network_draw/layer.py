@@ -54,7 +54,7 @@ class Layer:
     def rightmost_x(self):
         return max(n.x for n in self.neurons) if self.neurons else 0
 
-    def __line_between_two_neurons(self, neuron1, neuron2, weight=None):
+    def __line_between_two_neurons(self, neuron1, neuron2, weight=None, is_highlighted=False):
         dx = neuron2.x - neuron1.x
         dy = neuron2.y - neuron1.y
         angle = atan2(dx, dy)
@@ -63,14 +63,21 @@ class Layer:
 
         line_color = "black"
         line_width = 1.0
-        if weight is not None:
+        line_alpha = 0.85
+        
+        if is_highlighted:
+            # Highlighted connections: use bright green/lime color
+            line_color = "lime"
+            line_width = 3.0
+            line_alpha = 1.0
+        elif weight is not None:
             line_color = "tab:blue" if weight >= 0 else "tab:red"
             line_width = min(0.5 + abs(weight) * 1.5, 4.0)
 
         line = plt.Line2D(
             (neuron1.x - x_adjustment, neuron2.x + x_adjustment),
             (neuron1.y - y_adjustment, neuron2.y + y_adjustment),
-            color=line_color, linewidth=line_width, alpha=0.85, zorder=1,
+            color=line_color, linewidth=line_width, alpha=line_alpha, zorder=1,
         )
         plt.gca().add_line(line)
         return line_color
@@ -122,7 +129,8 @@ class Layer:
                 zorder=3,
             )
 
-    def draw(self, layer_type=0, weights=None, show_weights=False):
+    def draw(self, layer_type=0, weights=None, show_weights=False, 
+             highlighted_neurons=None, next_highlighted_neurons=None):
         has_activation = self.activation is not None
         below_label_distance = 0.75 if (has_activation and layer_type == -1) else 0.35
 
@@ -149,7 +157,16 @@ class Layer:
                             weight = weights[i][j]
                         except (IndexError, TypeError):
                             weight = None
-                    color = self.__line_between_two_neurons(neuron, prev_neuron, weight=weight)
+                    
+                    # Determine if this connection should be highlighted
+                    is_highlighted = False
+                    if highlighted_neurons is not None and next_highlighted_neurons is not None:
+                        # Only highlight if both the source and target neurons are in the highlight list
+                        if i in highlighted_neurons and j in next_highlighted_neurons:
+                            is_highlighted = True
+                    
+                    color = self.__line_between_two_neurons(neuron, prev_neuron, weight=weight, 
+                                                           is_highlighted=is_highlighted)
                     if draw_weight_text and weight is not None:
                         connections_to_label.append({
                             "x1": prev_neuron.x, "y1": prev_neuron.y,
