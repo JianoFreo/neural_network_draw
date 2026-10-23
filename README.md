@@ -267,8 +267,4 @@ Where:
 - matplotlib
 - NumPy (if used internally in the layout logic)
 
-- matplotlib
-- NumPy (if used internally in the layout logic)
-
-
 
