@@ -177,65 +177,98 @@ dnn.draw(show_weights=True)
 Highlighted connections are displayed in bright green with thicker lines to stand out from regular connections.
 
 ---
----
-
-
 ## Neuron Computation (Forward Propagation)
 
-For a single neuron $j$ in layer $l$, the computation is:
+A neuron computes a weighted sum of its inputs, adds a bias, and applies an activation function.
 
-**Linear transformation with bias:**
-$$z_j^{(l)} = \sum_{i=1}^{n_{l-1}} w_{ij}^{(l)} \cdot a_i^{(l-1)} + b_j^{(l)}$$
+### 1. Linear Transformation
+
+$$
+z_j^{(l)} = \sum_{i=1}^{n_{l-1}} w_{ij}^{(l)} a_i^{(l-1)} + b_j^{(l)}
+$$
+
+**Where:**
+
+- $w_{ij}^{(l)}$ = Weight connecting neuron $i$ in the previous layer to neuron $j$ in the current layer.
+- $a_i^{(l-1)}$ = Activation output from neuron $i$ in the previous layer.
+- $b_j^{(l)}$ = Bias of neuron $j$.
+- $z_j^{(l)}$ = Pre-activation value.
+- $l$ = Current layer.
+- $i$ = Neuron in the previous layer.
+- $j$ = Neuron in the current layer.
+
+### 2. Activation Functions
+
+Activation functions determine how a neuron transforms its input.
+
+**ReLU (Rectified Linear Unit)**
+
+$$
+f(z) = \max(0, z)
+$$
+
+Returns $z$ if it is positive; otherwise, returns $0$.
+
+**Sigmoid**
+
+$$
+f(z) = \frac{1}{1 + e^{-z}}
+$$
+
+Maps a value to a range between $0$ and $1$.
+
+**Tanh (Hyperbolic Tangent)**
+
+$$
+f(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}
+$$
+
+Maps a value to a range between $-1$ and $1$.
+
+**Softmax**
+
+For an output layer containing $n$ neurons:
+
+$$
+f(z_j) = \frac{e^{z_j}}{\sum_{k=1}^{n} e^{z_k}}
+$$
+
+Converts output scores into probabilities that sum to $1$.
+
+### 3. Layer-wise Computation
+
+For an entire neural network layer, the computation uses a weight matrix, an activation vector, and a bias vector.
+
+**Linear transformation:**
+
+$$
+z^{(l)} = W^{(l)} a^{(l-1)} + b^{(l)}
+$$
+
+**Activation:**
+
+$$
+a^{(l)} = f(z^{(l)})
+$$
 
 Where:
-- $w_{ij}^{(l)}$ = weight from neuron $i$ in layer $(l-1)$ to neuron $j$ in layer $l$
-- $a_i^{(l-1)}$ = activation output from neuron $i$ in previous layer
-- $b_j^{(l)}$ = bias term for neuron $j$
-- $z_j^{(l)}$ = pre-activation value (shown as weights on connections)
 
-## Activation Functions
-
-After the linear transformation, an activation function is applied:
-
-**ReLU (Rectified Linear Unit):**
-
-$$
-a_j^{(l)} = \max(0, z_j^{(l)}) =
-\begin{cases}
-z_j^{(l)} & \text{if } z_j^{(l)} > 0 \\
-0 & \text{otherwise}
-\end{cases}
-$$
-
-**Sigmoid:**
-$$a_j^{(l)} = \sigma(z_j^{(l)}) = \frac{1}{1 + e^{-z_j^{(l)}}}$$
-
-**Softmax (for output layer with $n$ neurons):**
-$$a_j^{(l)} = \frac{e^{z_j^{(l)}}}{\sum_{k=1}^{n} e^{z_k^{(l)}}}$$
-
-**Tanh:**
-$$a_j^{(l)} = \tanh(z_j^{(l)}) = \frac{e^{2z_j^{(l)}} - 1}{e^{2z_j^{(l)}} + 1}$$
-
-## Layer-wise Computation
-
-For a complete layer with weight matrix $W^{(l)}$, bias vector $b^{(l)}$, and input $a^{(l-1)}$:
-
-$$z^{(l)} = W^{(l)} \cdot a^{(l-1)} + b^{(l)}$$
-
-$$a^{(l)} = f(z^{(l)})$$
-
-Where $f$ is the activation function for that layer.
+- $W^{(l)}$ = Weight matrix of the current layer.
+- $a^{(l-1)}$ = Activation vector from the previous layer.
+- $b^{(l)}$ = Bias vector of the current layer.
+- $z^{(l)}$ = Pre-activation vector.
+- $f$ = Activation function applied to the layer.
 
 ---
 
-#  Dependencies
+## Dependencies
 
-* Python 3.8+
-* matplotlib
-* numpy (if used internally in layout logic)
+- Python 3.8+
+- matplotlib
+- NumPy (if used internally in the layout logic)
 
----
-
+- matplotlib
+- NumPy (if used internally in the layout logic)
 
 
 
