@@ -36,6 +36,7 @@ def is_torch_module(obj):
     """True if ``obj`` looks like a ``torch.nn.Module`` (duck-typed, no torch import)."""
     return (
         hasattr(obj, "modules")
+        and hasattr(obj, "_modules")
         and hasattr(obj, "children")
         and hasattr(obj, "named_parameters")
         and callable(getattr(obj, "modules"))

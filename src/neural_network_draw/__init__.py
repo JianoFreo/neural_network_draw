@@ -2,6 +2,7 @@ from .drawNN import DrawNN
 from .layer import Layer
 from .neuralNetwork import NeuralNetwork
 from .neuron import Neuron
+from .torch_support import UnsupportedModelError, extract_architecture
 
 
 def draw_model(model, show_weights=False, figsize=None, **kwargs):
@@ -9,4 +10,5 @@ def draw_model(model, show_weights=False, figsize=None, **kwargs):
     DrawNN(model, **kwargs).draw(show_weights=show_weights, figsize=figsize)
 
 
-__all__ = ["Neuron", "Layer", "NeuralNetwork", "DrawNN", "draw_model"]
+__all__ = ["Neuron", "Layer", "NeuralNetwork", "DrawNN", "draw_model",
+           "extract_architecture", "UnsupportedModelError"]
