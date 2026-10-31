@@ -102,6 +102,14 @@ class NeuralNetwork:
         elif self.number_of_neurons_in_widest_layer >= 8:
             horizontal_spacing = 1.8  # keep very wide layers from becoming huge
 
+        # Long activation labels (e.g. "ReLU → Sigmoid" for stacked activations) need
+        # more room between neurons, otherwise neighbouring labels overlap. Short
+        # names (ReLU, Softmax, ...) are unaffected.
+        longest_activation = max(
+            (len(str(spec["activation"])) for spec in self.layer_specs
+             if spec["activation"] is not None), default=0)
+        horizontal_spacing = max(horizontal_spacing, 0.2 * longest_activation + 0.4)
+
         vertical_spacing = 6.0
         if any_weights and show_weights:
             vertical_spacing += 2.0   # room for weight-value text on connections

@@ -329,6 +329,32 @@ Tensors and NumPy arrays are also accepted anywhere plain lists were (`weights=`
 
 PyTorch is optional: the original list-based API works without it installed (`pip install neural-network-draw[torch]` to add it).
 
+## Examples
+
+Every script in `tests/` is a runnable demo (`example_1` ... `example_14`). Play them all:
+
+```bash
+python tests/run_all_examples.py              # a window per diagram; close it for the next
+python tests/run_all_examples.py --save-only  # no windows, PNGs go to tests/demo_output/
+python tests/run_all_examples.py 7 10         # only examples 7 and 10
+```
+
+| # | Demo |
+|---|------|
+| 1-4 | Original examples: structure, labels, low-level and high-level full features |
+| 5 | PyTorch `nn.Sequential` drawn directly |
+| 6 | Custom `nn.Module` + `draw_model` one-liner |
+| 7 | Trained weights: XOR network before vs after training |
+| 8 | Labels and a highlighted path on a PyTorch model |
+| 9 | Nested modules (blocks, `Sequential` in `Sequential`, `ModuleList`) |
+| 10 | Layers defined out of order, fixed with `example_input` |
+| 11 | Unsupported layers: `strict=True` error vs `strict=False` warning |
+| 12 | Tensors (CPU/CUDA, `requires_grad`) in the manual APIs |
+| 13 | Activation gallery (stacked activations, ignored Dropout/Identity) |
+| 14 | A larger model |
+
+The PyTorch examples are skipped automatically if torch isn't installed.
+
 ## Running the tests
 
 ```bash
