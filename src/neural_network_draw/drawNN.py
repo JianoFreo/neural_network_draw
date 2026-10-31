@@ -3,13 +3,26 @@ try:
 except ImportError:
     from neuralNetwork import NeuralNetwork
 
+try:
+    from ._convert import is_torch_module, to_plain
+    from .torch_support import extract_architecture
+except ImportError:
+    from _convert import is_torch_module, to_plain
+    from torch_support import extract_architecture
+
+DEFAULT_TITLE = "Neural Network Architecture"
+
 
 class DrawNN:
     def __init__(self, neural_network, weights=None, biases=None, activations=None,
-                 input_labels=None, output_labels=None, title="Neural Network Architecture",
-                 highlight_path=None):
+                 input_labels=None, output_labels=None, title=DEFAULT_TITLE,
+                 highlight_path=None, strict=True, example_input=None):
         """
-        neural_network: list of ints, e.g. [3, 4, 4, 2] (sizes of each layer)
+        neural_network: EITHER a list of ints, e.g. [3, 4, 4, 2] (sizes of each layer),
+                 OR a PyTorch model (torch.nn.Module). With a model, the layer sizes,
+                 weights, biases and activations are read from it automatically
+                 (see DrawNN.from_pytorch). Anything you pass explicitly
+                 (weights, biases, activations, labels, ...) overrides what was read.
         weights: optional list of 2D lists, one per connection between consecutive layers,
                  e.g. weights[0] connects layer 0 -> layer 1, shaped [size0][size1]
         biases: optional list of lists, one list of biases per layer (skip/None for input layer)
@@ -20,15 +33,41 @@ class DrawNN:
         title: custom title shown above the diagram
         highlight_path: optional list of lists specifying which neurons to highlight per layer,
                        e.g. [[0], [1, 2], [0]] highlights specific neuron paths through the network
+        strict: (PyTorch models only) True raises UnsupportedModelError if the model contains
+                something that can't be drawn accurately (Conv, BatchNorm, custom ops, ...);
+                False skips those parts with a warning. Ignored for a list of sizes.
+        example_input: (PyTorch models only) a tensor (or tuple of args) used for one eval-mode,
+                no_grad forward pass to find the real layer execution order. Optional.
         """
-        self.neural_network = neural_network
-        self.weights = weights
-        self.biases = biases
+        if is_torch_module(neural_network):
+            arch = extract_architecture(neural_network, strict=strict, example_input=example_input)
+            if title == DEFAULT_TITLE:
+                title = f"{type(neural_network).__name__} Architecture"
+            neural_network = arch["sizes"]
+            weights = arch["weights"] if weights is None else weights
+            biases = arch["biases"] if biases is None else biases
+            activations = arch["activations"] if activations is None else activations
+
+        # tensors / numpy arrays are accepted anywhere plain lists are
+        self.neural_network = [int(n) for n in neural_network]
+        self.weights = to_plain(weights)
+        self.biases = to_plain(biases)
         self.activations = activations
         self.input_labels = input_labels
         self.output_labels = output_labels
         self.title = title
         self.highlight_path = highlight_path
+
+    @classmethod
+    def from_pytorch(cls, model, **kwargs):
+        """
+        Build a DrawNN straight from a torch.nn.Module (same as DrawNN(model, ...)).
+        Accepts every DrawNN argument (labels, highlight_path, title, ...) plus
+        strict= and example_input=; explicit arguments override what's read from the model.
+        """
+        if not is_torch_module(model):
+            raise TypeError("from_pytorch expects a torch.nn.Module")
+        return cls(model, **kwargs)
 
     def draw(self, show_weights=False, figsize=None):
         widest_layer = max(self.neural_network)

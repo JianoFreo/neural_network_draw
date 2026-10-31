@@ -8,6 +8,11 @@ try:
 except ImportError:
     from layer import Layer
 
+try:
+    from ._convert import is_torch_module, to_plain
+except ImportError:
+    from _convert import is_torch_module, to_plain
+
 
 class NeuralNetwork:
     def __init__(self, number_of_neurons_in_widest_layer, title="Neural Network Architecture"):
@@ -16,6 +21,42 @@ class NeuralNetwork:
         self.layer_specs = []  # (weights, biases, activation, labels) per layer
         self.title = title
         self.highlight_path = None  # List of neuron indices per layer to highlight
+
+    @classmethod
+    def from_pytorch(cls, model, title=None, activations=None, input_labels=None,
+                     output_labels=None, strict=True, example_input=None):
+        """
+        Build a NeuralNetwork from a torch.nn.Module (Linear layers + activation modules).
+        Weights, biases and activation names are filled in automatically.
+        Returns the network, so you can still call set_highlight_path(...) / draw(...).
+        See torch_support.extract_architecture for what is supported and for the
+        meaning of strict / example_input.
+        """
+        if not is_torch_module(model):
+            raise TypeError("from_pytorch expects a torch.nn.Module")
+        try:
+            from .torch_support import extract_architecture
+        except ImportError:
+            from torch_support import extract_architecture
+
+        arch = extract_architecture(model, strict=strict, example_input=example_input)
+        acts = arch["activations"] if activations is None else activations
+        sizes = arch["sizes"]
+        network = cls(max(sizes), title=title or f"{type(model).__name__} Architecture")
+        for idx, size in enumerate(sizes):
+            labels = None
+            if idx == 0:
+                labels = input_labels
+            elif idx == len(sizes) - 1:
+                labels = output_labels
+            network.add_layer(
+                size,
+                weights=arch["weights"][idx - 1] if idx > 0 else None,
+                biases=arch["biases"][idx],
+                activation=acts[idx] if idx < len(acts) else None,
+                labels=labels,
+            )
+        return network
 
     def add_layer(self, number_of_neurons, weights=None, biases=None, activation=None, labels=None):
         """
@@ -29,8 +70,8 @@ class NeuralNetwork:
         """
         self.layer_specs.append({
             "size": number_of_neurons,
-            "weights": weights,
-            "biases": biases,
+            "weights": to_plain(weights),   # accepts lists, torch tensors, numpy arrays
+            "biases": to_plain(biases),
             "activation": activation,
             "labels": labels,
         })
@@ -60,6 +101,14 @@ class NeuralNetwork:
             horizontal_spacing = 2.8
         elif self.number_of_neurons_in_widest_layer >= 8:
             horizontal_spacing = 1.8  # keep very wide layers from becoming huge
+
+        # Long activation labels (e.g. "ReLU → Sigmoid" for stacked activations) need
+        # more room between neurons, otherwise neighbouring labels overlap. Short
+        # names (ReLU, Softmax, ...) are unaffected.
+        longest_activation = max(
+            (len(str(spec["activation"])) for spec in self.layer_specs
+             if spec["activation"] is not None), default=0)
+        horizontal_spacing = max(horizontal_spacing, 0.2 * longest_activation + 0.4)
 
         vertical_spacing = 6.0
         if any_weights and show_weights:
