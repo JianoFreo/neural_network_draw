@@ -16,7 +16,7 @@ DEFAULT_TITLE = "Neural Network Architecture"
 class DrawNN:
     def __init__(self, neural_network, weights=None, biases=None, activations=None,
                  input_labels=None, output_labels=None, title=DEFAULT_TITLE,
-                 highlight_path=None):
+                 highlight_path=None, strict=True, example_input=None):
         """
         neural_network: EITHER a list of ints, e.g. [3, 4, 4, 2] (sizes of each layer),
                  OR a PyTorch model (torch.nn.Module). With a model, the layer sizes,
@@ -33,9 +33,14 @@ class DrawNN:
         title: custom title shown above the diagram
         highlight_path: optional list of lists specifying which neurons to highlight per layer,
                        e.g. [[0], [1, 2], [0]] highlights specific neuron paths through the network
+        strict: (PyTorch models only) True raises UnsupportedModelError if the model contains
+                something that can't be drawn accurately (Conv, BatchNorm, custom ops, ...);
+                False skips those parts with a warning. Ignored for a list of sizes.
+        example_input: (PyTorch models only) a tensor (or tuple of args) used for one eval-mode,
+                no_grad forward pass to find the real layer execution order. Optional.
         """
         if is_torch_module(neural_network):
-            arch = extract_architecture(neural_network)
+            arch = extract_architecture(neural_network, strict=strict, example_input=example_input)
             if title == DEFAULT_TITLE:
                 title = f"{type(neural_network).__name__} Architecture"
             neural_network = arch["sizes"]
@@ -55,7 +60,13 @@ class DrawNN:
 
     @classmethod
     def from_pytorch(cls, model, **kwargs):
-        """Build a DrawNN straight from a torch.nn.Module (same as DrawNN(model, ...))."""
+        """
+        Build a DrawNN straight from a torch.nn.Module (same as DrawNN(model, ...)).
+        Accepts every DrawNN argument (labels, highlight_path, title, ...) plus
+        strict= and example_input=; explicit arguments override what's read from the model.
+        """
+        if not is_torch_module(model):
+            raise TypeError("from_pytorch expects a torch.nn.Module")
         return cls(model, **kwargs)
 
     def draw(self, show_weights=False, figsize=None):
