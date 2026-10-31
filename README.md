@@ -4,8 +4,6 @@
 [![Python](https://img.shields.io/pypi/pyversions/neural-network-draw)](https://pypi.org/project/neural-network-draw/)
 [![Downloads](https://img.shields.io/pypi/dm/neural-network-draw)](https://pypi.org/project/neural-network-draw/)
 [![License](https://img.shields.io/pypi/l/neural-network-draw)](LICENSE)
-[![GitHub Issues](https://img.shields.io/github/issues/JianoFreo/neural_network_draw)](https://github.com/JianoFreo/neural_network_draw/issues)
-[![Last Commit](https://img.shields.io/github/last-commit/JianoFreo/neural_network_draw)](https://github.com/JianoFreo/neural_network_draw/commits)
 
 A Python library for **visualizing neural network architectures** using matplotlib.
 
