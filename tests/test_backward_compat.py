@@ -82,3 +82,16 @@ def test_library_imports_and_draws_without_torch_installed():
     out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
     assert out.returncode == 0, out.stderr
     assert out.stdout.strip().endswith("ok")
+
+
+def test_short_activation_labels_keep_original_spacing_long_ones_get_room():
+    def spacing(activation):
+        net = NeuralNetwork(4)
+        net.add_layer(3)
+        net.add_layer(4, activation=activation)
+        net.draw()
+        return net.layers[1].horizontal_distance_between_neurons
+
+    assert spacing("ReLU") == 2.0          # unchanged from before
+    assert spacing("Softmax") == 2.0
+    assert spacing("ReLU → Sigmoid") > 2.0  # stacked activations get extra room
