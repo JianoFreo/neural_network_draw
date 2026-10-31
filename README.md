@@ -13,6 +13,7 @@ It supports both:
 
 *  Low-level step-by-step network building (`NeuralNetwork`)
 *  High-level one-call architecture visualization (`DrawNN`)
+*  Drawing a PyTorch model directly (`DrawNN(model)`)
 
 
 # to install
@@ -265,10 +266,65 @@ Where:
 
 ---
 
+## 3. PyTorch models (just pass the model)
+
+No need to build lists of sizes, weights or biases by hand. Pass a `torch.nn.Module`
+and everything is read from it automatically: layer sizes, **trained weights**, biases
+and activation names.
+
+```python
+import torch.nn as nn
+from neural_network_draw import DrawNN, draw_model
+
+model = nn.Sequential(
+    nn.Linear(3, 4),
+    nn.ReLU(),
+    nn.Linear(4, 2),
+    nn.Softmax(dim=1),
+)
+
+DrawNN(model).draw(show_weights=True)   # or the one-liner:
+draw_model(model, show_weights=True)
+```
+
+Custom `nn.Module` classes work too, and anything you pass explicitly is added on top
+of (or overrides) what was read from the model:
+
+```python
+DrawNN(
+    model,
+    input_labels=["x1", "x2", "x3"],
+    output_labels=["Cat", "Dog"],
+    highlight_path=[[0], [1, 2], [0]],
+    title="My model",
+).draw(show_weights=True)
+```
+
+Also available: `DrawNN.from_pytorch(model)` and `NeuralNetwork.from_pytorch(model)`
+(the latter returns a `NeuralNetwork` you can keep customizing).
+
+What is read from the model:
+
+* every `nn.Linear` becomes a layer (the first one also creates the input layer)
+* an activation module (`ReLU`, `Sigmoid`, `Tanh`, `Softmax`, ...) is shown under the `Linear` layer before it
+* `Dropout`, `BatchNorm`, `Flatten`, etc. are ignored
+* layers are read in the order they are defined in the model; activations used as
+  `F.relu(...)` inside `forward()` can't be detected, so pass `activations=[None, "ReLU", ...]`
+* only plain feed-forward chains of `nn.Linear` layers are supported (no conv / branching)
+
+Tensors and NumPy arrays are also accepted anywhere plain lists were (`weights=`, `biases=`,
+`add_layer(...)`). Note the library's weight layout is `[previous_size][layer_size]`;
+PyTorch's `Linear.weight` is `[out][in]`, so use `weight.T` if you pass one by hand
+(`DrawNN(model)` does this for you). PyTorch is optional: the original list-based API
+works without it installed.
+
+---
+
 ## Dependencies
 
 - Python 3.8+
 - matplotlib
 - NumPy (if used internally in the layout logic)
+- PyTorch (optional, only needed to draw `torch.nn.Module` models)
 
 

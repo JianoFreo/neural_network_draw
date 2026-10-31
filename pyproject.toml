@@ -20,5 +20,8 @@ dependencies = [
     "matplotlib>=3.7",
 ]
 
+[project.optional-dependencies]
+torch = ["torch"]
+
 [tool.setuptools.packages.find]
 where = ["src"]

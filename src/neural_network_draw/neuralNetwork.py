@@ -8,6 +8,11 @@ try:
 except ImportError:
     from layer import Layer
 
+try:
+    from ._convert import is_torch_module, to_plain
+except ImportError:
+    from _convert import is_torch_module, to_plain
+
 
 class NeuralNetwork:
     def __init__(self, number_of_neurons_in_widest_layer, title="Neural Network Architecture"):
@@ -16,6 +21,33 @@ class NeuralNetwork:
         self.layer_specs = []  # (weights, biases, activation, labels) per layer
         self.title = title
         self.highlight_path = None  # List of neuron indices per layer to highlight
+
+    @classmethod
+    def from_pytorch(cls, model, title=None, activations=None):
+        """
+        Build a NeuralNetwork from a torch.nn.Module (Linear layers + activation modules).
+        Weights, biases and activation names are filled in automatically.
+        Returns the network, so you can still call set_highlight_path(...) / draw(...).
+        """
+        if not is_torch_module(model):
+            raise TypeError("from_pytorch expects a torch.nn.Module")
+        try:
+            from .torch_support import extract_architecture
+        except ImportError:
+            from torch_support import extract_architecture
+
+        arch = extract_architecture(model)
+        acts = arch["activations"] if activations is None else activations
+        network = cls(max(arch["sizes"]),
+                      title=title or f"{type(model).__name__} Architecture")
+        for idx, size in enumerate(arch["sizes"]):
+            network.add_layer(
+                size,
+                weights=arch["weights"][idx - 1] if idx > 0 else None,
+                biases=arch["biases"][idx],
+                activation=acts[idx] if idx < len(acts) else None,
+            )
+        return network
 
     def add_layer(self, number_of_neurons, weights=None, biases=None, activation=None, labels=None):
         """
@@ -29,8 +61,8 @@ class NeuralNetwork:
         """
         self.layer_specs.append({
             "size": number_of_neurons,
-            "weights": weights,
-            "biases": biases,
+            "weights": to_plain(weights),   # accepts lists, torch tensors, numpy arrays
+            "biases": to_plain(biases),
             "activation": activation,
             "labels": labels,
         })
