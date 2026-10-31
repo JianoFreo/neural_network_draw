@@ -23,11 +23,14 @@ class NeuralNetwork:
         self.highlight_path = None  # List of neuron indices per layer to highlight
 
     @classmethod
-    def from_pytorch(cls, model, title=None, activations=None):
+    def from_pytorch(cls, model, title=None, activations=None, input_labels=None,
+                     output_labels=None, strict=True, example_input=None):
         """
         Build a NeuralNetwork from a torch.nn.Module (Linear layers + activation modules).
         Weights, biases and activation names are filled in automatically.
         Returns the network, so you can still call set_highlight_path(...) / draw(...).
+        See torch_support.extract_architecture for what is supported and for the
+        meaning of strict / example_input.
         """
         if not is_torch_module(model):
             raise TypeError("from_pytorch expects a torch.nn.Module")
@@ -36,16 +39,22 @@ class NeuralNetwork:
         except ImportError:
             from torch_support import extract_architecture
 
-        arch = extract_architecture(model)
+        arch = extract_architecture(model, strict=strict, example_input=example_input)
         acts = arch["activations"] if activations is None else activations
-        network = cls(max(arch["sizes"]),
-                      title=title or f"{type(model).__name__} Architecture")
-        for idx, size in enumerate(arch["sizes"]):
+        sizes = arch["sizes"]
+        network = cls(max(sizes), title=title or f"{type(model).__name__} Architecture")
+        for idx, size in enumerate(sizes):
+            labels = None
+            if idx == 0:
+                labels = input_labels
+            elif idx == len(sizes) - 1:
+                labels = output_labels
             network.add_layer(
                 size,
                 weights=arch["weights"][idx - 1] if idx > 0 else None,
                 biases=arch["biases"][idx],
                 activation=acts[idx] if idx < len(acts) else None,
+                labels=labels,
             )
         return network
 

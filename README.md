@@ -305,18 +305,38 @@ Also available: `DrawNN.from_pytorch(model)` and `NeuralNetwork.from_pytorch(mod
 
 What is read from the model:
 
-* every `nn.Linear` becomes a layer (the first one also creates the input layer)
-* an activation module (`ReLU`, `Sigmoid`, `Tanh`, `Softmax`, ...) is shown under the `Linear` layer before it
-* `Dropout`, `BatchNorm`, `Flatten`, etc. are ignored
-* layers are read in the order they are defined in the model; activations used as
-  `F.relu(...)` inside `forward()` can't be detected, so pass `activations=[None, "ReLU", ...]`
-* only plain feed-forward chains of `nn.Linear` layers are supported (no conv / branching)
+* every `nn.Linear` becomes a layer (the first one also creates the input layer), with its real weights and biases
+* activation modules (`ReLU`, `Sigmoid`, `Tanh`, `Softmax`, `LeakyReLU`, `GELU`, ...) are shown under the `Linear` layer before them; several in a row are shown as `ReLU → Sigmoid`
+* `Dropout*`, `Identity` and `Flatten` don't change the data at inference, so they are left out of the diagram
+* nested `Sequential`s, `ModuleList`s and custom modules are fine as long as they are built from the above
+* values are detached and copied to plain Python floats (CPU or CUDA, any dtype); the model's parameters, gradients and train/eval mode are never changed
 
-Tensors and NumPy arrays are also accepted anywhere plain lists were (`weights=`, `biases=`,
-`add_layer(...)`). Note the library's weight layout is `[previous_size][layer_size]`;
-PyTorch's `Linear.weight` is `[out][in]`, so use `weight.T` if you pass one by hand
-(`DrawNN(model)` does this for you). PyTorch is optional: the original list-based API
-works without it installed.
+**Nothing is silently misdrawn.** Anything the diagram can't represent accurately (`Conv`, `BatchNorm`, `LayerNorm`, RNNs, `GLU`, custom operations, skip connections / branching, parameters owned directly by a container, ...) raises an `UnsupportedModelError` that names the offending modules. If you'd rather skip them, pass `strict=False` to get a warning and a diagram without those parts.
+
+```python
+DrawNN(model_with_batchnorm, strict=False).draw()   # warns, then omits the BatchNorm layers
+```
+
+**Layer order.** By default layers are read in the order they are defined, which is the forward order for `nn.Sequential` and for most custom modules. If a custom module defines its layers in a different order than it uses them, pass `example_input` and the real execution order is traced with one eval-mode, no-gradient forward pass (hooks are removed and train/eval flags restored afterwards; layers that never run are left out):
+
+```python
+DrawNN(model, example_input=torch.zeros(1, 4)).draw()
+```
+
+Activations written as `F.relu(...)` inside `forward()` can't be detected; pass `activations=[None, "ReLU", ...]` for those.
+
+Tensors and NumPy arrays are also accepted anywhere plain lists were (`weights=`, `biases=`, `add_layer(...)`). Note the library's weight layout is `[previous_size][layer_size]`; PyTorch's `Linear.weight` is `[out][in]`, so use `weight.T` if you pass one by hand (`DrawNN(model)` does this for you).
+
+PyTorch is optional: the original list-based API works without it installed (`pip install neural-network-draw[torch]` to add it).
+
+## Running the tests
+
+```bash
+pip install -e . pytest torch
+pytest tests/
+```
+
+The PyTorch tests skip themselves if torch isn't installed, and the CUDA tests run only when a GPU is available.
 
 ---
 
