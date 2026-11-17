@@ -1,10 +1,11 @@
 <div align="center">
   <img
     src="https://github.com/user-attachments/assets/201e73b0-f0df-4196-bb2d-2a87fb32ece6"
-    width="402"
+    width="300"
     alt="Neural Network Draw"
   />
 
+  <br><br>
 
   <p>
     <a href="https://pypi.org/project/neural-network-draw/">
