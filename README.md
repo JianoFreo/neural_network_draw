@@ -1,9 +1,26 @@
-# neural_network_draw
+<div align="center">
+  <img
+    src="https://github.com/user-attachments/assets/201e73b0-f0df-4196-bb2d-2a87fb32ece6"
+    width="402"
+    alt="Neural Network Draw"
+  />
 
-[![PyPI Version](https://img.shields.io/pypi/v/neural-network-draw)](https://pypi.org/project/neural-network-draw/)
-[![Python](https://img.shields.io/pypi/pyversions/neural-network-draw)](https://pypi.org/project/neural-network-draw/)
-[![Downloads](https://img.shields.io/pypi/dm/neural-network-draw)](https://pypi.org/project/neural-network-draw/)
-[![License](https://img.shields.io/pypi/l/neural-network-draw)](LICENSE)
+
+  <p>
+    <a href="https://pypi.org/project/neural-network-draw/">
+      <img src="https://img.shields.io/pypi/v/neural-network-draw" alt="PyPI Version">
+    </a>
+    <a href="https://pypi.org/project/neural-network-draw/">
+      <img src="https://img.shields.io/pypi/pyversions/neural-network-draw" alt="Python">
+    </a>
+    <a href="https://pypi.org/project/neural-network-draw/">
+      <img src="https://img.shields.io/pypi/dm/neural-network-draw" alt="Downloads">
+    </a>
+    <a href="LICENSE">
+      <img src="https://img.shields.io/pypi/l/neural-network-draw" alt="License">
+    </a>
+  </p>
+</div>
 
 A Python library for **visualizing neural network architectures** using matplotlib.
 
@@ -212,102 +229,6 @@ PyTorch is optional: the original list-based API works without it installed.
 
 ---
 
-#  Visualization Features
-
-##  Network structure rendering
-
-* Fully automatic layer spacing
-* Centered neuron layout
-
-##  Weights display
-
-* Optional numeric display
-* Color/thickness encodes magnitude & sign
-
-##  Bias visualization
-
-* Shown per neuron (optional)
-* Supports partial or full specification
-
-##  Activation labels
-
-* ReLU
-* Softmax
-* Sigmoid
-* Custom strings supported
-
-##  Input / output labeling
-
-* Human-readable feature names
-* Class labels or regression outputs
-
-##  Connection highlighting
-
-* Highlight signal paths through specific neurons
-* Visualize forward propagation routes
-* Identify computational paths of interest
-* Use `highlight_path` parameter to specify neurons to highlight per layer
-
-### Example:
-
-```python
-# Highlight a specific path through the network
-# This highlights neuron 0 in layer 0 → neurons 1,2 in layer 1 → neuron 0 in layer 2
-network = NeuralNetwork(4)
-network.add_layer(3, labels=["pixel_1", "pixel_2", "pixel_3"])
-network.add_layer(4, activation="ReLU")
-network.add_layer(2, activation="Softmax", labels=["Cat", "Dog"])
-
-# Set the path to highlight
-network.set_highlight_path([[0], [1, 2], [0]])
-network.draw(show_weights=True)
-```
-
-### Or use DrawNN with highlight_path:
-
-```python
-dnn = DrawNN(
-    [3, 4, 2],
-    weights=[...],
-    biases=[None, [...], [...]],
-    activations=[None, "ReLU", "Softmax"],
-    input_labels=["x1", "x2", "x3"],
-    output_labels=["Cat", "Dog"],
-    highlight_path=[[0], [1, 2], [0]],  # Highlight specific neuron path
-)
-dnn.draw(show_weights=True)
-```
-
-Highlighted connections are displayed in bright green with thicker lines to stand out from regular connections.
-
----
-
-| # | Demo |
-|---|------|
-| 1-4 | Original examples: structure, labels, low-level and high-level full features |
-| 5 | PyTorch `nn.Sequential` drawn directly |
-| 6 | Custom `nn.Module` + `draw_model` one-liner |
-| 7 | Trained weights: XOR network before vs after training |
-| 8 | Labels and a highlighted path on a PyTorch model |
-| 9 | Nested modules (blocks, `Sequential` in `Sequential`, `ModuleList`) |
-| 10 | Layers defined out of order, fixed with `example_input` |
-| 11 | Unsupported layers: `strict=True` error vs `strict=False` warning |
-| 12 | Tensors (CPU/CUDA, `requires_grad`) in the manual APIs |
-| 13 | Activation gallery (stacked activations, ignored Dropout/Identity) |
-| 14 | A larger model |
-
-The PyTorch examples are skipped automatically if torch isn't installed.
-
-## Running the tests
-
-```bash
-pip install -e . pytest torch
-pytest tests/
-```
-
-The PyTorch tests skip themselves if torch isn't installed, and the CUDA tests run only when a GPU is available.
-
----
 
 ## What's new in 0.3.0
 
@@ -406,8 +327,25 @@ Where:
 
 ---
 
-## Dependencies
+<h2 align="center">Stats</h2>
 
-- Python 3.8+
-- matplotlib (NumPy is installed with it)
-- PyTorch (optional, only needed to draw `torch.nn.Module` models)
+<div align="center">
+  <img
+    src="https://github.com/user-attachments/assets/ea3b59a8-537d-4d41-ba03-860442636b7e"
+    width="90%"
+    alt="Stats 1"
+  />
+  <img
+    src="https://github.com/user-attachments/assets/192412b6-aeec-4e62-bb42-66190f677d51"
+    width="90%"
+    alt="Stats 2"
+  />
+  <img
+    src="https://github.com/user-attachments/assets/feeac44e-7a52-42f3-a967-18d37f7fdc78"
+    width="90%"
+    alt="Stats 3"
+  />
+</div>
+
+
+
