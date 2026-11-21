@@ -348,5 +348,19 @@ Where:
   />
 </div>
 
+---
 
+<p align="center">
+  If you find <strong>Neural Network Draw</strong> useful, consider supporting its development. Every coffee helps keep the project growing!
+</p>
+
+<p align="center">
+  <a href="https://buymeacoffee.com/jianofreo">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" width="200" />
+  </a>
+</p>
+
+<p align="center">
+  Thank you for supporting open-source development! ❤️
+</p>
 
