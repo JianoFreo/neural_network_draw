@@ -70,6 +70,7 @@ This library converts a neural network definition into a **visual graph represen
 
 ---
 
+# Architecture Overview
 
 The project offers three ways to create a diagram. They all share the same rendering engine:
 
@@ -77,20 +78,18 @@ The project offers three ways to create a diagram. They all share the same rende
 |---|---|---|
 | `NeuralNetwork` (low-level) | you want full control over each layer | layers added one by one |
 | `DrawNN` (high-level) | you want a quick diagram from a list of layer sizes | a list such as `[3, 4, 2]` plus options |
+| `DrawNN(model)` (PyTorch) | you already have a PyTorch model | a `torch.nn.Module` |
 
-### Examples
+---
+
+# Examples
 
 <table>
 <tr>
-<th width="50%">Code</th>
-<th width="50%">Output</th>
-</tr>
-
-<tr>
-<td colspan="2"><b>Example 1: Custom PyTorch model (structure, labels, weights, highlighted path)</b></td>
+<th align="left">Example 1: Custom PyTorch model (labels, weights, highlighted path)</th>
 </tr>
 <tr>
-<td valign="top" width="50%">
+<td>
 
 ```python
 import torch.nn as nn
@@ -129,17 +128,18 @@ def run():
 ```
 
 </td>
-<td valign="top" width="50%" align="center">
-<img width="100%" alt="IrisNet with labels, weights and highlighted path" src="https://github.com/user-attachments/assets/2b52cc8f-ee90-405c-9354-d1345f4f3822" />
+</tr>
+<tr>
+<td align="center">
+<img width="600" alt="IrisNet with labels, weights and highlighted path" src="https://github.com/user-attachments/assets/2b52cc8f-ee90-405c-9354-d1345f4f3822" />
 <br><sub><b>IrisNet: labels, weights and highlighted path</b></sub>
 </td>
 </tr>
-
 <tr>
-<td colspan="2"><b>Example 2: Compact model with a title (weights hidden)</b></td>
+<th align="left">Example 2: Compact model with a title (weights hidden)</th>
 </tr>
 <tr>
-<td valign="top" width="50%">
+<td>
 
 ```python
 import torch
@@ -173,17 +173,21 @@ def run():
 ```
 
 </td>
-<td valign="top" width="50%" align="center">
-<img width="100%" alt="Iris classifier drawn from a PyTorch model" src="https://github.com/user-attachments/assets/0de30ca6-4104-46f3-8693-3b73609e006e" />
+</tr>
+<tr>
+<td align="center">
+<img width="500" alt="Iris classifier drawn from a PyTorch model" src="https://github.com/user-attachments/assets/0de30ca6-4104-46f3-8693-3b73609e006e" />
 <br><sub><b>Iris classifier with a title, weights hidden</b></sub>
 </td>
 </tr>
-
 <tr>
-<td colspan="2"><b>Example 3: Larger <code>nn.Sequential</code> model (weight colours and thickness)</b></td>
+<th align="left">Example 3: Larger <code>nn.Sequential</code> model (weight colours and thickness)</th>
 </tr>
 <tr>
-<td valign="top" width="50%">
+<td>Weight numbers are hidden on big layers, but line colour (blue = positive, red = negative) and thickness still show every weight.</td>
+</tr>
+<tr>
+<td>
 
 ```python
 import torch
@@ -207,17 +211,18 @@ if __name__ == "__main__":
 ```
 
 </td>
-<td valign="top" width="50%" align="center">
-<img width="100%" alt="8-10-6-3 network with weight colours" src="https://github.com/user-attachments/assets/66bf218c-c134-42d2-8839-2e0259ece900" />
+</tr>
+<tr>
+<td align="center">
+<img width="800" alt="8-10-6-3 network with weight colours" src="https://github.com/user-attachments/assets/66bf218c-c134-42d2-8839-2e0259ece900" />
 <br><sub><b>8 → 10 → 6 → 3: blue = positive, red = negative, thickness = size</b></sub>
 </td>
 </tr>
 </table>
 
 ---
----
 
-## 3.  PyTorch models (just pass the model)
+# PyTorch models (just pass the model)
 
 No need to build lists of sizes, weights or biases by hand. Pass a `torch.nn.Module`
 and everything is read from it automatically: layer sizes, **trained weights**, biases
@@ -254,7 +259,6 @@ DrawNN(
 Also available: `DrawNN.from_pytorch(model)` and `NeuralNetwork.from_pytorch(model)`
 (the latter returns a `NeuralNetwork` you can keep customizing).
 
-
 ### Tensors in the manual APIs
 
 Tensors and NumPy arrays are also accepted anywhere plain lists were (`weights=`, `biases=`, `add_layer(...)`). Note the library's weight layout is `[previous_size][layer_size]`; PyTorch's `Linear.weight` is `[out][in]`, so use `weight.T` if you pass one by hand (`DrawNN(model)` does this for you).
@@ -267,7 +271,6 @@ PyTorch is optional: the original list-based API works without it installed.
 * layers wider than 64 neurons give a warning, because every neuron and connection is drawn
 
 ---
-
 
 ## What's new in 0.3.0
 
@@ -401,4 +404,3 @@ Where:
 <p align="center">
   Thank you for supporting open-source development! ❤️
 </p>
-
