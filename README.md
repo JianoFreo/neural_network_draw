@@ -70,7 +70,6 @@ This library converts a neural network definition into a **visual graph represen
 
 ---
 
-#  Architecture Overview
 
 The project offers three ways to create a diagram. They all share the same rendering engine:
 
@@ -78,80 +77,144 @@ The project offers three ways to create a diagram. They all share the same rende
 |---|---|---|
 | `NeuralNetwork` (low-level) | you want full control over each layer | layers added one by one |
 | `DrawNN` (high-level) | you want a quick diagram from a list of layer sizes | a list such as `[3, 4, 2]` plus options |
-| `DrawNN(model)` (PyTorch) | you already have a PyTorch model | a `torch.nn.Module` |
 
-## 1.  `NeuralNetwork` (Low-level API)
+### Examples
 
-A step-by-step builder for full control over each layer.
-Weights are given as `[previous_layer_size][this_layer_size]`.
+<table>
+<tr>
+<th width="50%">Code</th>
+<th width="50%">Output</th>
+</tr>
 
-### Example:
+<tr>
+<td colspan="2"><b>Example 1: Custom PyTorch model (structure, labels, weights, highlighted path)</b></td>
+</tr>
+<tr>
+<td valign="top" width="50%">
 
 ```python
-from neural_network_draw import NeuralNetwork
+import torch.nn as nn
+from neural_network_draw import DrawNN, draw_model
 
-network = NeuralNetwork(4)
 
-network.add_layer(3, labels=["pixel_1", "pixel_2", "pixel_3"])
+class IrisNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(4, 6)
+        self.act1 = nn.ReLU()
+        self.fc2 = nn.Linear(6, 6)
+        self.act2 = nn.Tanh()
+        self.out = nn.Linear(6, 3)
+        self.softmax = nn.Softmax(dim=1)
 
-network.add_layer(
-    4,
-    weights=[
-        [0.10, -0.20, 0.30, 0.40],
-        [0.50, 0.60, -0.70, 0.80],
-        [-0.10, 0.20, 0.30, -0.40],
-    ],
-    biases=[0.10, 0.20, 0.30, 0.40],
-    activation="ReLU",
-)
+    def forward(self, x):
+        x = self.act1(self.fc1(x))
+        x = self.act2(self.fc2(x))
+        return self.softmax(self.out(x))
 
-network.add_layer(
-    2,
-    weights=[
-        [0.20, -0.30],
-        [0.10, 0.40],
-        [0.50, -0.60],
-        [0.20, 0.10],
-    ],
-    biases=[0.05, -0.05],
-    activation="Softmax",
-    labels=["Cat", "Dog"],
-)
 
-network.draw(show_weights=True)
+def run():
+    model = IrisNet()
+
+    # Option 1: Structure only
+    draw_model(model)
+
+    # Option 2: With labels, weights, and a highlighted path
+    DrawNN(
+        model,
+        input_labels=["sepal_len", "sepal_wid", "petal_len", "petal_wid"],
+        output_labels=["Setosa", "Versicolor", "Virginica"],
+        highlight_path=[[0], [1, 2], [0], [1]],
+    ).draw(show_weights=True)
 ```
-<img width="596" height="720" alt="image" src="https://github.com/user-attachments/assets/6949d89f-0eeb-459a-8b13-1229b35f3b4e" />
 
----
+</td>
+<td valign="top" width="50%" align="center">
+<img width="100%" alt="IrisNet with labels, weights and highlighted path" src="https://github.com/user-attachments/assets/2b52cc8f-ee90-405c-9354-d1345f4f3822" />
+<br><sub><b>IrisNet: labels, weights and highlighted path</b></sub>
+</td>
+</tr>
 
-## 2.  `DrawNN` (High-level API)
-
-<img width="676" height="692" alt="image-1 (1)" src="https://github.com/user-attachments/assets/88296c93-112b-49a8-b753-f2281012f009" />
-
-### Labeled structure
-
-<img width="650" height="757" alt="image-2" src="https://github.com/user-attachments/assets/1d957bb4-6097-457a-a87a-2c5cbe5d50a4" />
-
-A simplified interface for quickly defining architectures.
-
-### Example:
+<tr>
+<td colspan="2"><b>Example 2: Compact model with a title (weights hidden)</b></td>
+</tr>
+<tr>
+<td valign="top" width="50%">
 
 ```python
+import torch
+import torch.nn as nn
+
 from neural_network_draw import DrawNN
 
-dnn = DrawNN(
-    [3, 4, 2],
-    weights=[...],
-    biases=[None, [...], [...]],
-    activations=[None, "ReLU", "Softmax"],
-    input_labels=["x1", "x2", "x3"],
-    output_labels=["Cat", "Dog"],
-    title="High-Level API Example",
-)
 
-dnn.draw(show_weights=True)
+class IrisNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1, self.act1 = nn.Linear(4, 6), nn.ReLU()
+        self.fc2, self.act2 = nn.Linear(6, 6), nn.Tanh()
+        self.out, self.softmax = nn.Linear(6, 3), nn.Softmax(dim=1)
+
+    def forward(self, x):
+        x = self.act1(self.fc1(x))
+        x = self.act2(self.fc2(x))
+        return self.softmax(self.out(x))
+
+
+def run():
+    torch.manual_seed(0)
+    DrawNN(
+        IrisNet(),
+        input_labels=["sepal_len", "sepal_wid", "petal_len", "petal_wid"],
+        output_labels=["Setosa", "Versicolor", "Virginica"],
+        highlight_path=[[0], [1, 2], [0], [1]],
+        title="Iris classifier (from a PyTorch model)",
+    ).draw(show_weights=False)
 ```
 
+</td>
+<td valign="top" width="50%" align="center">
+<img width="100%" alt="Iris classifier drawn from a PyTorch model" src="https://github.com/user-attachments/assets/0de30ca6-4104-46f3-8693-3b73609e006e" />
+<br><sub><b>Iris classifier with a title, weights hidden</b></sub>
+</td>
+</tr>
+
+<tr>
+<td colspan="2"><b>Example 3: Larger <code>nn.Sequential</code> model (weight colours and thickness)</b></td>
+</tr>
+<tr>
+<td valign="top" width="50%">
+
+```python
+import torch
+import torch.nn as nn
+
+from neural_network_draw import DrawNN
+
+
+def run():
+    torch.manual_seed(7)
+    model = nn.Sequential(
+        nn.Linear(8, 10), nn.ReLU(),
+        nn.Linear(10, 6), nn.ReLU(),
+        nn.Linear(6, 3), nn.Softmax(dim=1),
+    )
+    DrawNN(model, title="8 -> 10 -> 6 -> 3").draw(show_weights=True)
+
+
+if __name__ == "__main__":
+    run()
+```
+
+</td>
+<td valign="top" width="50%" align="center">
+<img width="100%" alt="8-10-6-3 network with weight colours" src="https://github.com/user-attachments/assets/66bf218c-c134-42d2-8839-2e0259ece900" />
+<br><sub><b>8 → 10 → 6 → 3: blue = positive, red = negative, thickness = size</b></sub>
+</td>
+</tr>
+</table>
+
+---
 ---
 
 ## 3.  PyTorch models (just pass the model)
@@ -191,31 +254,6 @@ DrawNN(
 Also available: `DrawNN.from_pytorch(model)` and `NeuralNetwork.from_pytorch(model)`
 (the latter returns a `NeuralNetwork` you can keep customizing).
 
-### What is read from the model
-
-* every `nn.Linear` becomes a layer (the first one also creates the input layer), with its real weights and biases
-* activation modules (`ReLU`, `Sigmoid`, `Tanh`, `Softmax`, `LeakyReLU`, `GELU`, ...) are shown under the `Linear` layer before them; several in a row are shown as `ReLU → Sigmoid`
-* `Dropout*`, `Identity` and `Flatten` don't change the data at inference, so they are left out of the diagram
-* nested `Sequential`s, `ModuleList`s and custom modules are fine as long as they are built from the above
-* values are detached and copied to plain Python floats (CPU or CUDA, any dtype); the model's parameters, gradients and train/eval mode are never changed
-
-### Unsupported layers
-
-**Nothing is silently misdrawn.** Anything the diagram can't represent accurately (`Conv`, `BatchNorm`, `LayerNorm`, RNNs, `GLU`, custom operations, skip connections / branching, parameters owned directly by a container, ...) raises an `UnsupportedModelError` that names the offending modules. If you'd rather skip them, pass `strict=False` to get a warning and a diagram without those parts.
-
-```python
-DrawNN(model_with_batchnorm, strict=False).draw()   # warns, then omits the BatchNorm layers
-```
-
-### Layer order
-
-By default layers are read in the order they are defined, which is the forward order for `nn.Sequential` and for most custom modules. If a custom module defines its layers in a different order than it uses them, pass `example_input` and the real execution order is traced with one eval-mode, no-gradient forward pass (hooks are removed and train/eval flags restored afterwards; layers that never run are left out):
-
-```python
-DrawNN(model, example_input=torch.zeros(1, 4)).draw()
-```
-
-Activations written as `F.relu(...)` inside `forward()` can't be detected; pass `activations=[None, "ReLU", ...]` for those.
 
 ### Tensors in the manual APIs
 
